@@ -1,0 +1,106 @@
+﻿@using MyJSGames.Models;
+@model MyJSGames.Models.Leaderboard
+
+@{
+    ViewBag.Title = "Leaderboard";
+}
+
+<h2>@Model.game.GameTitle Leaderboard</h2>
+@if (User.IsInRole(ApplicationConstants.ADMIN))
+{
+    <p><a href='@Url.Action("ClearLeaderBoard", "GameScore", Model.game)'>Clear this leaderboard</a></p>
+}
+
+<p><a href='@Url.Action(Model.game.GameAction, "Games")'>Play @Model.game.GameTitle</a></p>
+
+<p>
+    @if(Model.Offset > 0)
+    { 
+    <a href='@Url.Action("Leaderboard", "GameScore", 
+        new { id = Model.game.GameId, pageOffset = (Model.Offset - ApplicationConstants.PAGE)})'>Previous @ApplicationConstants.PAGE</a>
+    }
+    |
+    <a href='@Url.Action("Leaderboard", "GameScore", new { id = Model.game.GameId, pageOffset = 0})'>Back to top</a>
+    |
+    @if((Model.Offset + ApplicationConstants.PAGE) < Model.ScoreList.Count)
+    { 
+    <a href='@Url.Action("Leaderboard", "GameScore", 
+        new { id = Model.game.GameId, pageOffset = (Model.Offset + ApplicationConstants.PAGE) })'>Next @ApplicationConstants.PAGE</a>
+    }
+</p>
+
+<div class="row">
+    <div id="leaderboard">
+        <table class="table" border="1">
+            <tr>
+                <th>
+                    @Html.DisplayName("Rank")
+                </th>
+                <th>
+                    @*I don't have a GameScore to grab onto until I get inside the for loop below,
+                    so I think I'm stuck hardcoding the column headers.*@
+                    @Html.DisplayName("User")
+                </th>
+                <th>
+                    @Html.DisplayName("Score")
+                </th>
+                <th>
+                    @Html.DisplayName("Date Played")
+                </th>
+                <th></th>
+            </tr>
+
+            @for (int i = Model.Offset; ((i < (Model.Offset + ApplicationConstants.PAGE)) && (i < Model.ScoreList.Count)); i++)
+            {                
+                    <tr>
+                        <td>
+                            @if (User.Identity.IsAuthenticated && Model.ScoreList[i].Player.UserName.Equals(User.Identity.Name)) 
+                            { 
+                                <strong><em> @(i + 1) </em></strong>
+                            }
+                            else
+                            {        
+                                @(i + 1)
+                            }
+                        </td>
+                        <td>
+                            @if (User.Identity.IsAuthenticated && Model.ScoreList[i].Player.UserName.Equals(User.Identity.Name))
+                            {
+                                <strong><em> @Html.DisplayFor(entry => Model.ScoreList[i].Player.displayName) </em></strong>
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(entry => Model.ScoreList[i].Player.displayName)
+                            }
+                        </td>
+                        <td>
+                            @if (User.Identity.IsAuthenticated && Model.ScoreList[i].Player.UserName.Equals(User.Identity.Name))
+                            {
+                                <strong><em> @Html.DisplayFor(entry => Model.ScoreList[i].Score) </em></strong>
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(entry => Model.ScoreList[i].Score)
+                            }                            
+                        </td>
+                        <td>
+                            @if (User.Identity.IsAuthenticated && Model.ScoreList[i].Player.UserName.Equals(User.Identity.Name))
+                            {
+                                <strong><em> @Html.DisplayFor(entry => Model.ScoreList[i].whenPlayed) </em></strong>
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(entry => Model.ScoreList[i].whenPlayed)
+                            }                                                                                    
+                        </td>
+                        @if (User.IsInRole(ApplicationConstants.ADMIN))
+                        {
+                            <td><small><a href='@Url.Action("Delete", "GameScore", new { id = Model.ScoreList[i].GameScoreId })'>Delete this score</a></small></td>
+                        }
+                    </tr>                
+            }
+        </table>
+
+
+    </div><!--end leaderboard-->
+</div><!--end row-->

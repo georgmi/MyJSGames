@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewBag.Title = "Admin";
+}
+
+<h2>Admin</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Game Management</h2>
+        <ul>
+            <li><a href='@Url.Action("Create", "Game")'>Add a Game</a></li>
+            <li><a href='@Url.Action("Index", "Game")'>Manage Games</a></li>
+        </ul>
+    </div>
+    <div class="col-md-4">
+        <h2>User Management</h2>
+        <ul>
+            <li><a href='@Url.Action("UserList", "Account")'>See the User List</a></li>
+        </ul>
+    </div>
+    <div class="col-md-4">
+        <h2>Leaderboard Management</h2>
+        <ul>
+            <li>Leaderboard management functions can be found on the Leaderboard page.</li>
+        </ul>
+    </div>
+    <div class="col-md-4">
+        <h2>Database Management</h2>
+        <div class="alert alert-warning">
+            The "Seed Leaderboards" task requires Games and Users to already exist in the database. 
+            Attempting to seed leaderboards with empty tables for Games or Users will have no effect.
+        </div>
+
+        <ul>
+            <li>@Html.ActionLink("Seed Games", "SeedGames")</li>
+            <li>@Html.ActionLink("Seed Users", "SeedUsers")</li>
+            <li>@Html.ActionLink("Seed Leaderboards", "SeedDB")</li>
+        </ul>
+    </div>
+</div>
+
+@*<p><a href='@Url.Action("SoloPong", "Games")'><img src='@Url.Content("/Content/images/sp.png")' height="447" width="299" /></a></p>*@

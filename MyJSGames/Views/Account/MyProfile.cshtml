@@ -1,0 +1,57 @@
+﻿@using Microsoft.AspNet.Identity
+
+@model MyJSGames.Models.PlayerStats
+
+@{
+    ViewBag.Title = "My Profile";
+}
+
+<h2>@Model.Player.UserName</h2>
+
+<table class="table" border="1">
+    <tr>
+        <th>
+            @Html.DisplayName("Game")
+        </th>
+        <th>
+            @Html.DisplayName("Times Played")
+        </th>
+        <th>
+            @Html.DisplayName("Worst Score")
+        </th>
+        <th>
+            @Html.DisplayName("Best Score")
+        </th>
+        <th>
+            @Html.DisplayName("Average Score")
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var gameSummary in Model.GameSummaries)
+    {
+        <tr>
+            <td>
+                <strong><a href='@Url.Action(gameSummary.game.GameAction, "Games")'>@Html.DisplayFor(entry => gameSummary.game.GameTitle)</a></strong> 
+            </td>
+            <td>
+                @Html.DisplayFor(entry => gameSummary.gamesPlayed)
+            </td>
+            <td>
+                @Html.DisplayFor(entry => gameSummary.minScore)
+            </td>
+            <td>
+                @Html.DisplayFor(entry => gameSummary.maxScore)
+            </td>
+            <td>
+                @Html.DisplayFor(entry => gameSummary.avgScore)
+            </td>
+            <td>
+                <small><a href='@Url.Action("ClearUserScores", "GameScore", gameSummary.game)'>Clear scores</a></small>
+            </td>
+        </tr>
+    }
+</table>
+
+<p><a href='@Url.Action("Manage", "Account")'>Change my password</a></p>
+
+<p><a href='@Url.Action("UserData", "Account")'>Change my Display Name</a></p>

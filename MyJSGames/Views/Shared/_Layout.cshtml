@@ -1,0 +1,52 @@
+﻿@using System.Web;
+@using MyJSGames.Models;
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Monster Games</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Monster Games", "Index", "Home", null, new { @class = "navbar-brand" })
+            </div><!-- end navbar-header-->
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Leaderboards", "Leaderboards", "GameScore")</li>
+                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    @*TODO: Implement Admin page.*@
+                    @if(User.IsInRole(ApplicationConstants.ADMIN))
+                    { 
+                    <li>@Html.ActionLink("Admin", "Admin", "Home")</li>
+                    }
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div><!-- end navbar-collapse-->
+        </div>
+    </div><!-- end navbar-->
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>Site &copy; @DateTime.Now.Year by Just Better Software</p>
+            <p>Games &copy; by their respective authors</p>
+        </footer>
+    </div><!-- end body-content-->
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

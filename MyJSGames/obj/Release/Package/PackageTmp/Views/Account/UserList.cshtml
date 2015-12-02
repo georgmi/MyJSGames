@@ -1,0 +1,76 @@
+﻿@using MyJSGames.Models;
+
+@*@model IEnumerable<MyJSGames.Models.PlayerStats>*@
+@model MyJSGames.Models.UserListViewModel
+
+@{
+    ViewBag.Title = "User List";
+}
+
+<h2>User List</h2>
+
+@*TODO: Add search field to narrow list of users. One field, search for username and displayname.*@
+
+<div>
+    <hr />
+    @foreach (var playerStats in Model.PlayerStats)
+    {
+        <h4>@playerStats.Player.UserName ("@playerStats.Player.displayName")
+            <small>
+                <a href='@Url.Action("AdminClearAllUserScores", "GameScore", playerStats.Player)'>Clear all scores</a> | 
+                @if (!playerStats.Player.Roles.Any(r => r.RoleId.Equals(Model.AdminRoleID)))
+                {
+                    <a href ='@Url.Action("MakeAdmin", "Account", playerStats.Player)'>Make admin</a>
+                }
+                else
+                {
+                    <a href='@Url.Action("RemoveAdmin", "Account", playerStats.Player)'>Remove admin</a>
+                }
+            </small></h4>
+        <table class="table" border="1">
+            <tr>
+                <th>
+                    @Html.DisplayName("Game") 
+                </th>
+                <th>
+                    @Html.DisplayName("Times Played")
+                </th>
+                <th>
+                    @Html.DisplayName("Worst Score")
+                </th>
+                <th>
+                    @Html.DisplayName("Best Score")
+                </th>
+                <th>
+                    @Html.DisplayName("Average Score")
+                </th>
+            </tr>
+            @foreach (var gameSummary in playerStats.GameSummaries)
+            {
+                <tr>
+                    <td>
+                        <strong>@Html.DisplayFor(entry => gameSummary.game.GameTitle)</strong> 
+                            @* BUGBUG: "pair" is null when the AdminClearScoresGameAndUser Action is invoked. 
+                                Obviously creating it here is incorrect somehow.
+                                Fix if time; requirement is for admin to delete all of a user's scores.
+                                Deleting per game is beyond the letter of the requirement, though nice to have.
+                            <small><a href='@Url.Action("AdminClearScoresGameAndUser", "GameScore", 
+                                new { pair = new MyJSGames.Models.PlayerGamePair(gameSummary.game, playerStats.Player)}  )'>Clear scores</a></small>*@
+                    </td>
+                    <td>
+                        @Html.DisplayFor(entry => gameSummary.gamesPlayed)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(entry => gameSummary.minScore)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(entry => gameSummary.maxScore)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(entry => gameSummary.avgScore)
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+</div>

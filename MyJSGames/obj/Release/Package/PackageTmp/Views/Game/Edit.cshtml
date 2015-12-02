@@ -1,0 +1,56 @@
+﻿@model MyJSGames.Models.Game
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Game</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.GameId)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.GameTitle, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.GameTitle)
+                @Html.ValidationMessageFor(model => model.GameTitle)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.GameAction, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.GameAction)
+                @Html.ValidationMessageFor(model => model.GameAction)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.GameImage, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.GameImage)
+                @Html.ValidationMessageFor(model => model.GameImage)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

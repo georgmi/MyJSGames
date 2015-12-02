@@ -1,0 +1,109 @@
+﻿@using MyJSGames.Models;
+@model IEnumerable<MyJSGames.Models.Leaderboard>
+@*
+    "model" below refers to the GameStats object passed in. Each GameStats object consists of a List<Leaderboard>.
+    Each Leaderboard has a Game object and a List<GameScore>.
+
+    Population logic should go:
+        1) For each Leaderboard, create a column entry with an <h2> of ThisLeaderboard.game.GameName and a table 
+            with <th> all the GameScore fields, and foreach GameScore in Thisleaderboard, a <tr> with the relevant GameScore data.
+            (Can leave off the GameTitle/GameID from the rows eventually, but leave them in for testing.
+            
+*@
+
+@{
+    ViewBag.Title = "Leaderboards Top Ten";
+}
+
+<h2>Leaderboards</h2>
+
+@if(User.IsInRole(ApplicationConstants.ADMIN))
+{            
+<p><a href='@Url.Action("ClearAllLeaderBoards", "GameScore")'>Clear all leaderboards</a></p>
+}
+
+<div class="row">
+    @foreach (var leaderboard in Model)
+    {
+        <div class="col-md-6">
+            <h2>@leaderboard.game.GameTitle</h2>
+            @if(User.IsInRole(ApplicationConstants.ADMIN))
+            { 
+            <p><a href='@Url.Action("ClearLeaderBoard", "GameScore", leaderboard.game)'>Clear this leaderboard</a></p>
+            }
+
+            <p><a href='@Url.Action(leaderboard.game.GameAction, "Games")'>Play @leaderboard.game.GameTitle again</a></p>
+            
+            <table class="table" border="1">
+                <tr>
+                    <th>
+                        @Html.DisplayName("Rank")
+                    </th>
+                    <th>
+                        @*I don't have a GameScore to grab onto until I get inside the for loop below,
+                             so I think I'm stuck hardcoding the column headers.*@
+                        @Html.DisplayName("User")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Score")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Date Played")
+                    </th>
+                    <th></th>
+                </tr>
+                                
+                @for (int i=leaderboard.Offset; (i < leaderboard.Offset + 10) && (i < leaderboard.ScoreList.Count); i++)
+                {
+                    <tr>
+                        <td>                            
+                            @if (User.Identity.IsAuthenticated && leaderboard.ScoreList[i].Player.UserName.Equals(User.Identity.Name))
+                            {
+                                <strong><em> @(i + 1) </em></strong>
+                            }
+                            else
+                            {
+                                @(i + 1)
+                            }
+                        </td>
+                        <td>
+                            @if (User.Identity.IsAuthenticated && leaderboard.ScoreList[i].Player.UserName.Equals(User.Identity.Name))
+                            {
+                                <strong><em> @Html.DisplayFor(entry => leaderboard.ScoreList[i].Player.displayName) </em></strong>
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(entry => leaderboard.ScoreList[i].Player.displayName)
+                            }
+                        </td>
+                        <td>
+                            @if (User.Identity.IsAuthenticated && leaderboard.ScoreList[i].Player.UserName.Equals(User.Identity.Name))
+                            {
+                                <strong><em> @Html.DisplayFor(entry => leaderboard.ScoreList[i].Score) </em></strong>
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(entry => leaderboard.ScoreList[i].Score)
+                            }                                                       
+                        </td>
+                        <td>
+                            @if (User.Identity.IsAuthenticated && leaderboard.ScoreList[i].Player.UserName.Equals(User.Identity.Name))
+                            {
+                                <strong><em> @Html.DisplayFor(entry => leaderboard.ScoreList[i].whenPlayed) </em></strong>
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(entry => leaderboard.ScoreList[i].whenPlayed)
+                            }
+                        </td>
+                        @if(User.IsInRole(ApplicationConstants.ADMIN))
+                        {
+                            <td><small><a href='@Url.Action("Delete", "GameScore", new { id = leaderboard.ScoreList[i].GameScoreId })'>Delete this score</a></small></td>
+                        }
+                    </tr>
+                }
+                <tr><a href='@Url.Action("Leaderboard", "GameScore", new { id = leaderboard.game.GameId, pageOffset = 0 })'>See entire Leaderboard for @leaderboard.game.GameTitle</a></tr>
+            </table>
+        </div> <!--end col-md-6-->
+    }
+</div> <!--end row-->

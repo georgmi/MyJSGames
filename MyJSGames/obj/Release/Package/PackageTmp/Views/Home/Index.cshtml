@@ -1,0 +1,27 @@
+﻿@using MyJSGames.Models;
+@model IEnumerable<MyJSGames.Models.Game>
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>Just Better Games</h1>
+    <p class="lead">Wasting people's bandwidth since 1993</p>
+</div>
+
+@* BUGBUG: Game names and actions should not be hard-coded. 
+    Should have a single "PlayGame" action that takes a Game object as an argument, 
+    and the Games DB table should contain all the information necessary to load the 
+    correct game, as well as the location of the image to display in this table.
+    Not in scope for this assignment.*@ 
+
+<div class="row">
+    @foreach(Game game in Model)
+    {
+        <div class="col-md-4">
+            <h2>@game.GameTitle</h2>
+            <p><a href='@Url.Action(game.GameAction, "Games")'><img src='@Url.Content("/Content/images/" + game.GameImage)' height="447" width="299" /></a></p>
+        </div>
+    }
+</div>
